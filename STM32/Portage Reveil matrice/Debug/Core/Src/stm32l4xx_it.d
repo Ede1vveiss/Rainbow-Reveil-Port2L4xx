@@ -31,7 +31,7 @@ Core/Src/stm32l4xx_it.o: ../Core/Src/stm32l4xx_it.c ../Core/Inc/main.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h \
  ../Core/Inc/includes.h ../Core/Inc/defines.h ../Core/Inc/main.h \
- C:/ST/Reveil_STM32-Matrice/Core/Library/Inc/image_data.h \
+ C:/ST/Reveil_STM32-Matrice/Core/Library/Inc/Image_data.h \
  ../Core/Inc/includes.h \
  C:/ST/Reveil_STM32-Matrice/Core/Library/Inc/canvas.h \
  C:/ST/Reveil_STM32-Matrice/Core/Library/Inc/color.h \
@@ -72,7 +72,7 @@ Core/Src/stm32l4xx_it.o: ../Core/Src/stm32l4xx_it.c ../Core/Inc/main.h \
 ../Core/Inc/includes.h:
 ../Core/Inc/defines.h:
 ../Core/Inc/main.h:
-C:/ST/Reveil_STM32-Matrice/Core/Library/Inc/image_data.h:
+C:/ST/Reveil_STM32-Matrice/Core/Library/Inc/Image_data.h:
 ../Core/Inc/includes.h:
 C:/ST/Reveil_STM32-Matrice/Core/Library/Inc/canvas.h:
 C:/ST/Reveil_STM32-Matrice/Core/Library/Inc/color.h:

@@ -5,21 +5,24 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../Core/Library/Src/BadApple_data.c \
+../Core/Library/Src/NotPickleRick_data.c \
 ../Core/Library/Src/canvas.c \
 ../Core/Library/Src/color.c \
-../Core/Library/Src/image_data.c \
 ../Core/Library/Src/ws2812.c 
 
 OBJS += \
+./Core/Library/Src/BadApple_data.o \
+./Core/Library/Src/NotPickleRick_data.o \
 ./Core/Library/Src/canvas.o \
 ./Core/Library/Src/color.o \
-./Core/Library/Src/image_data.o \
 ./Core/Library/Src/ws2812.o 
 
 C_DEPS += \
+./Core/Library/Src/BadApple_data.d \
+./Core/Library/Src/NotPickleRick_data.d \
 ./Core/Library/Src/canvas.d \
 ./Core/Library/Src/color.d \
-./Core/Library/Src/image_data.d \
 ./Core/Library/Src/ws2812.d 
 
 
@@ -30,7 +33,7 @@ Core/Library/Src/%.o Core/Library/Src/%.su Core/Library/Src/%.cyclo: ../Core/Lib
 clean: clean-Core-2f-Library-2f-Src
 
 clean-Core-2f-Library-2f-Src:
-	-$(RM) ./Core/Library/Src/canvas.cyclo ./Core/Library/Src/canvas.d ./Core/Library/Src/canvas.o ./Core/Library/Src/canvas.su ./Core/Library/Src/color.cyclo ./Core/Library/Src/color.d ./Core/Library/Src/color.o ./Core/Library/Src/color.su ./Core/Library/Src/image_data.cyclo ./Core/Library/Src/image_data.d ./Core/Library/Src/image_data.o ./Core/Library/Src/image_data.su ./Core/Library/Src/ws2812.cyclo ./Core/Library/Src/ws2812.d ./Core/Library/Src/ws2812.o ./Core/Library/Src/ws2812.su
+	-$(RM) ./Core/Library/Src/BadApple_data.cyclo ./Core/Library/Src/BadApple_data.d ./Core/Library/Src/BadApple_data.o ./Core/Library/Src/BadApple_data.su ./Core/Library/Src/NotPickleRick_data.cyclo ./Core/Library/Src/NotPickleRick_data.d ./Core/Library/Src/NotPickleRick_data.o ./Core/Library/Src/NotPickleRick_data.su ./Core/Library/Src/canvas.cyclo ./Core/Library/Src/canvas.d ./Core/Library/Src/canvas.o ./Core/Library/Src/canvas.su ./Core/Library/Src/color.cyclo ./Core/Library/Src/color.d ./Core/Library/Src/color.o ./Core/Library/Src/color.su ./Core/Library/Src/ws2812.cyclo ./Core/Library/Src/ws2812.d ./Core/Library/Src/ws2812.o ./Core/Library/Src/ws2812.su
 
 .PHONY: clean-Core-2f-Library-2f-Src
 

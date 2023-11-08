@@ -84,7 +84,7 @@ uint8_t interrupteur4_OLD = 0;
 //static uint8_t Rx_data[19];
 
 uint16_t step = 0;
-uint8_t loop = 0;
+uint16_t loop = 0;
 
 
 
@@ -129,6 +129,7 @@ int main(void)
 
 	uint8_t H =0;
 	ImageData* pacManSprite;
+	IndexedImageData* IndexedSprite;
 	// Déclarez une instance de Canvas
 	Canvas myCanvas;
 	// Initialisez la structure Canvas
@@ -160,129 +161,39 @@ int main(void)
 
 
 
-	  for(uint8_t diag=1; diag<=23; diag++){
-	  		  colorDiagonal(&myCanvas, HSVtoPixel((H + (diag* 255 / 23))%255 , MAX_LUX), diag);
-	  	  }
+	  //for(uint8_t diag=1; diag<=23; diag++){
+	  //		  colorDiagonal(&myCanvas, HSVtoPixel((H + (diag* 255 / 23))%255 , MAX_LUX), diag);
+	  //	  }
 
-	  	  drawRectangle(&myCanvas, 19, 5, 1, 1, (Pixel){0,0,0}, (Pixel){0,0,0});
+	  	  //drawRectangle(&myCanvas, 19, 5, 1, 1, (Pixel){0,0,0}, (Pixel){0,0,0});
 
-	  	  displayBCD(&myCanvas, 8, 3, H>>4, 4);
-
-	  	switch((loop/2)%98){
-	  		  	  case 0 : pacManSprite = &Rick0; break;
-	  		  	  case 1 : pacManSprite = &Rick1; break;
-	  		  	  case 2 : pacManSprite = &Rick2; break;
-	  		  	  case 3 : pacManSprite = &Rick3; break;
-	  		  	  case 4 : pacManSprite = &Rick4; break;
-	  		  	  case 5 : pacManSprite = &Rick5; break;
-	  		  	  case 6 : pacManSprite = &Rick6; break;
-	  		  	  case 7 : pacManSprite = &Rick7; break;
-	  		  	  case 8 : pacManSprite = &Rick8; break;
-	  		  	  case 9 : pacManSprite = &Rick9; break;
-	  		  	  case 10 : pacManSprite = &Rick10; break;
-	  		  	  case 11 : pacManSprite = &Rick11; break;
-	  		  	  case 12 : pacManSprite = &Rick12; break;
-	  		  	  case 13 : pacManSprite = &Rick13; break;
-	  		  	case 14 : pacManSprite = &Rick14; break;
-	  		  	case 15 : pacManSprite = &Rick15; break;
-	  		  	case 16 : pacManSprite = &Rick16; break;
-	  		  	case 17 : pacManSprite = &Rick17; break;
-	  		  	case 18 : pacManSprite = &Rick18; break;
-	  		  	case 19 : pacManSprite = &Rick19; break;
-	  		  	case 20 : pacManSprite = &Rick20; break;
-	  		  	case 21 : pacManSprite = &Rick21; break;
-	  		  	case 22 : pacManSprite = &Rick22; break;
-	  		  	case 23 : pacManSprite = &Rick23; break;
-	  		  	case 24 : pacManSprite = &Rick24; break;
-	  		  	case 25 : pacManSprite = &Rick25; break;
-	  		  	case 26 : pacManSprite = &Rick26; break;
-	  		  	case 27 : pacManSprite = &Rick27; break;
-	  		  	case 28 : pacManSprite = &Rick28; break;
-	  		  	case 29 : pacManSprite = &Rick29; break;
-	  		  	case 30 : pacManSprite = &Rick30; break;
-	  		  	case 31 : pacManSprite = &Rick31; break;
-	  		  	case 32 : pacManSprite = &Rick32; break;
-	  		  	case 33 : pacManSprite = &Rick33; break;
-	  		  	case 34 : pacManSprite = &Rick34; break;
-	  		  	case 35 : pacManSprite = &Rick35; break;
-	  		  	case 36 : pacManSprite = &Rick36; break;
-	  		  	case 37 : pacManSprite = &Rick37; break;
-	  		  	case 38 : pacManSprite = &Rick38; break;
-	  		  	case 39 : pacManSprite = &Rick39; break;
-	  		  	case 40 : pacManSprite = &Rick40; break;
-	  		  	case 41 : pacManSprite = &Rick41; break;
-	  		  	case 42 : pacManSprite = &Rick42; break;
-	  		  	case 43 : pacManSprite = &Rick43; break;
-	  		  	case 44 : pacManSprite = &Rick44; break;
-	  		  	case 45 : pacManSprite = &Rick45; break;
-	  		  	case 46 : pacManSprite = &Rick46; break;
-	  		  case 47	 : pacManSprite = &Rick47	; break;
-	  		  case 48	 : pacManSprite = &Rick48	; break;
-	  		  case 49	 : pacManSprite = &Rick49	; break;
-	  		  case 50	 : pacManSprite = &Rick50	; break;
-	  		  case 51	 : pacManSprite = &Rick51	; break;
-	  		  case 52	 : pacManSprite = &Rick52	; break;
-	  		  case 53	 : pacManSprite = &Rick53	; break;
-	  		  case 54	 : pacManSprite = &Rick54	; break;
-	  		  case 55	 : pacManSprite = &Rick55	; break;
-	  		  case 56	 : pacManSprite = &Rick56	; break;
-	  		  case 57	 : pacManSprite = &Rick57	; break;
-	  		  case 58	 : pacManSprite = &Rick58	; break;
-	  		  case 59	 : pacManSprite = &Rick59	; break;
-	  		  case 60	 : pacManSprite = &Rick60	; break;
-	  		  case 61	 : pacManSprite = &Rick61	; break;
-	  		  case 62	 : pacManSprite = &Rick62	; break;
-	  		  case 63	 : pacManSprite = &Rick63	; break;
-	  		  case 64	 : pacManSprite = &Rick64	; break;
-	  		  case 65	 : pacManSprite = &Rick65	; break;
-	  		  case 66	 : pacManSprite = &Rick66	; break;
-	  		  case 67	 : pacManSprite = &Rick67	; break;
-	  		  case 68	 : pacManSprite = &Rick68	; break;
-	  		  case 69	 : pacManSprite = &Rick69	; break;
-	  		  case 70	 : pacManSprite = &Rick70	; break;
-	  		  case 71	 : pacManSprite = &Rick71	; break;
-	  		  case 72	 : pacManSprite = &Rick72	; break;
-	  		  case 73	 : pacManSprite = &Rick73	; break;
-	  		  case 74	 : pacManSprite = &Rick74	; break;
-	  		  case 75	 : pacManSprite = &Rick75	; break;
-	  		  case 76	 : pacManSprite = &Rick76	; break;
-	  		  case 77	 : pacManSprite = &Rick77	; break;
-	  		  case 78	 : pacManSprite = &Rick78	; break;
-	  		  case 79	 : pacManSprite = &Rick79	; break;
-	  		  case 80	 : pacManSprite = &Rick80	; break;
-	  		  case 81	 : pacManSprite = &Rick81	; break;
-	  		  case 82	 : pacManSprite = &Rick82	; break;
-	  		  case 83	 : pacManSprite = &Rick83	; break;
-	  		  case 84	 : pacManSprite = &Rick84	; break;
-	  		  case 85	 : pacManSprite = &Rick85	; break;
-	  		  case 86	 : pacManSprite = &Rick86	; break;
-	  		  case 87	 : pacManSprite = &Rick87	; break;
-	  		  case 88	 : pacManSprite = &Rick88	; break;
-	  		  case 89	 : pacManSprite = &Rick89	; break;
-	  		  case 90	 : pacManSprite = &Rick90	; break;
-	  		  case 91	 : pacManSprite = &Rick91	; break;
-	  		  case 92	 : pacManSprite = &Rick92	; break;
-	  		  case 93	 : pacManSprite = &Rick93	; break;
-	  		  case 94	 : pacManSprite = &Rick94	; break;
-	  		  case 95	 : pacManSprite = &Rick95	; break;
-	  		  case 96	 : pacManSprite = &Rick96	; break;
-	  		  case 97	 : pacManSprite = &Rick97	; break;
+	  	 // displayBCD(&myCanvas, 8, 3, H>>4, 4);
 
 
-	  	  }
-	  	  drawImage(pacManSprite, 1, 1, &myCanvas);
+	  	//switch((loop/2)%98){
+	  	//	  	  case 0 : pacManSprite = &NotPickleRick; break;
+
+	  	  //pacManSprite = &NotPickleRick;
+	  	  IndexedSprite = &BadApple;
+
+
+	  	  //drawImage(pacManSprite, (loop/2)%98, 1, 1, &myCanvas);
+
+	  	  drawIndexedImage(IndexedSprite, (loop/4), 1, 1, &myCanvas);
+
 
 
 	  	  sendCanvas(&myCanvas);
 
 	  	  if (H >= 255){
 	  		  H=0;
+
 	  	  }
 	  	  else{
 	  		  H++;
 	  	  }
 
-	  	  if (loop <= 196)	++loop;
+	  	  if (loop <= 4688)	loop++;
 	  	  else loop = 0;
   
   }

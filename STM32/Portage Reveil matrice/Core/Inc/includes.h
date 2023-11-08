@@ -10,7 +10,7 @@
 
 #include "defines.h"
 #include "main.h"
-#include "image_data.h"
+#include "Image_data.h"
 #include "canvas.h"
 #include "color.h"
 #include "ws2812.h"

@@ -105,7 +105,11 @@ void displayBCD(Canvas* canvas, int X, int Y, int BCD, int NbDeBitAffiches) {
         }
 }
 
-void drawImage(ImageData* imageData, int x, int y, Canvas* canvas) {
+void drawImage(ImageData* imageData, int frame, int x, int y, Canvas* canvas) {
+
+//*****************	DECODAGE INDEXED 2BIT	*****************************/
+
+
     if (imageData == NULL || canvas == NULL) {
         // Gérez les cas d'erreur ou de paramètres non valides, si nécessaire
         return;
@@ -113,7 +117,8 @@ void drawImage(ImageData* imageData, int x, int y, Canvas* canvas) {
 /*********  modif EFV pour alpha toujours MAX  ****************/
     for (int imgY = 0; imgY < imageData->height; imgY++) {
         for (int imgX = 0; imgX < imageData->width; imgX++) {
-            uint8_t* pixel = &imageData->data[(imgY * imageData->width + imgX) * 3];  // BGR format
+        	//									sel ligne	        + sel col * decal RGB + decal image
+            uint8_t* pixel = &imageData->data[(imgY * imageData->width + imgX) * 3     /* + imageData->height*imageData->width*3*(frame)*/];  // BGR format
 /* alpha always max
             // Ignore les pixels totalement transparents (canal alpha à zéro)
             if (pixel[3] == 0x00) {
@@ -143,3 +148,49 @@ void drawImage(ImageData* imageData, int x, int y, Canvas* canvas) {
         }
     }
 }
+
+
+// Modified drawImage function to use indexed values
+void drawIndexedImage(IndexedImageData* indexedImage, int frame, int x, int y, Canvas* canvas) {
+    if (indexedImage == NULL || canvas == NULL) {
+        // Gérez les cas d'erreur ou de paramètres non valides, si nécessaire
+        return;
+    }
+
+    ImageData rgbaImage;
+    convertIndexedToRGBA(indexedImage, frame, &rgbaImage);
+
+    drawImage(&rgbaImage, 0, x, y, canvas);
+
+    free(rgbaImage.data);
+}
+
+// Define the color palette
+const uint8_t colorPalette[] = {
+    0xff, // Color of index 0
+    0x00, // Color of index 1
+    //0xff000010, // Color of index 2
+    //0xff000000,  // Color of index 3
+};
+
+//Rajout par EFV
+void convertIndexedToRGBA(IndexedImageData* indexedImage, int frame, ImageData* rgbaImage) {
+    rgbaImage->width = indexedImage->width;
+    rgbaImage->height = indexedImage->height;
+    rgbaImage->data = (uint8_t*)malloc(indexedImage->width * indexedImage->height * 3);
+
+    for (int j = 0; j < 5; j++){
+    		for (int i = 0; i < 19; i++) {
+    			uint8_t VertProg = 3*j;			//vertical progress of frame    24bits in 3 uint8
+    			uint16_t DecalFrame = 3*indexedImage->height*frame;		// offset for frame selection
+    			uint8_t HoriProg = i/8;			// Horizontal progress
+    			uint8_t DecalDeBit = 7 - i % 8;		// amount of bits to move to the right ONLY FOR 1bit index
+    			uint8_t index = (indexedImage->data[HoriProg + DecalFrame+VertProg] >> DecalDeBit) & 0x01;
+    			uint32_t color = colorPalette[index];
+    			rgbaImage->data[(i+19*j) * 3] = color;
+    			rgbaImage->data[(i+19*j) * 3 + 1] = color;
+    			rgbaImage->data[(i+19*j) * 3 + 2] = color;
+    		}
+    }
+}
+
