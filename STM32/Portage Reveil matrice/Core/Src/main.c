@@ -48,6 +48,7 @@ DMA_HandleTypeDef hdma_tim2_ch1;
 
 UART_HandleTypeDef huart1;
 DMA_HandleTypeDef hdma_usart1_tx;
+DMA_HandleTypeDef hdma_usart1_rx;
 
 /* USER CODE BEGIN PV */
 
@@ -81,7 +82,7 @@ uint8_t interrupteur2_OLD = 0;
 uint8_t interrupteur3_OLD = 0;
 uint8_t interrupteur4_OLD = 0;
 
-//static uint8_t Rx_data[19];
+static uint8_t Rx_data[19];
 
 uint16_t step = 0;
 uint16_t loop = 0;
@@ -167,19 +168,17 @@ int main(void)
 
 	  	  //drawRectangle(&myCanvas, 19, 5, 1, 1, (Pixel){0,0,0}, (Pixel){0,0,0});
 
-	  	 // displayBCD(&myCanvas, 8, 3, H>>4, 4);
+	  	  displayBCD(&myCanvas, 8, 3, Minutes_U, 4);
 
 
-	  	//switch((loop/2)%98){
-	  	//	  	  case 0 : pacManSprite = &NotPickleRick; break;
 
 	  	  //pacManSprite = &NotPickleRick;
-	  	  IndexedSprite = &BadApple;
+	  	  //IndexedSprite = &BadApple;
 
 
 	  	  //drawImage(pacManSprite, (loop/2)%98, 1, 1, &myCanvas);
 
-	  	  drawIndexedImage(IndexedSprite, (loop/4), 1, 1, &myCanvas);
+	  	  //drawIndexedImage(IndexedSprite, (loop/4), 1, 1, &myCanvas);
 
 
 
@@ -196,6 +195,11 @@ int main(void)
 	  	  if (loop <= 4688)	loop++;
 	  	  else loop = 0;
   
+		  if(HAL_UART_Receive_IT(&huart1, Rx_data, 19) != HAL_BUSY)				//I'm guessing this is the 1min update thing
+		  {
+			  HAL_UART_Receive_IT(&huart1, Rx_data, 19);
+		  }
+
   }
   /* USER CODE END 3 */
 }
@@ -403,6 +407,7 @@ static void MX_DMA_Init(void)
 
   /* DMA controller clock enable */
   __HAL_RCC_DMA1_CLK_ENABLE();
+  __HAL_RCC_DMA2_CLK_ENABLE();
 
   /* DMA interrupt init */
   /* DMA1_Channel1_IRQn interrupt configuration */
@@ -414,6 +419,9 @@ static void MX_DMA_Init(void)
   /* DMA1_Channel5_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
+  /* DMA2_Channel7_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Channel7_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Channel7_IRQn);
 
 }
 
@@ -436,6 +444,67 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+
+/******************************************************************************
+* Fonction 	HAL_UART_RxCpltCallback											  *
+*		Prototype	:void HAL_UART_RxCpltCallback (UART_HandleTypeDef * huart)*
+*																		 	  *
+*   Description des paramètres:												  *
+*			UART qu'on utilise												  *
+*																			  *
+*		Inclus :	main.c													  *
+*																			  *
+*	  Description															  *
+* Interruption qui va mettre dans des variables la réception UART comme le	  *
+* temps										 								  *
+******************************************************************************/
+
+void HAL_UART_RxCpltCallback (UART_HandleTypeDef * huart)
+{
+
+	if(&huart1 == huart)
+	{
+		Heures_brt = Rx_data[4];	//Stock le data des heures, "brt" = brute
+		Minutes_brt = Rx_data[5];	//Stock le data des minutes
+
+		Heures_U = Heures_brt & 0x0F;	//Traite le data pour avoir l'Unité des Heures
+
+		Heures_D = (Heures_brt & 0xF0) >> 4;	//Traite le data pour avoir la Dizaine des Heures
+
+		Minutes_U = Minutes_brt & 0x0F;	//Traite le data pour avoir l'Unité des Minutes
+
+		Minutes_D = (Minutes_brt & 0xF0) >> 4;	//Traite le data pour avoir la Dizaine des Minutes
+
+		if(HAL_UART_Receive_IT(&huart1, Rx_data, 19) == HAL_ERROR)	//Réception d'UART lors d'une erreur
+		{
+			HAL_UART_Receive_IT(&huart1, Rx_data, 19);
+		}
+	}
+}
+
+/******************************************************************************
+* Fonction 	HAL_UART_ErrorCallback											  *
+*		Prototype	:void HAL_UART_RxCpltCallback (UART_HandleTypeDef * huart)*
+*																		 	  *
+*   Description des paramètres:												  *
+*			UART qu'on utilise												  *
+*																			  *
+*		Inclus :	main.c													  *
+*																			  *
+*	  Description															  *
+* Interruption lorsqu'il y a un problème dans la transmission UART qui permet *
+* de refaire une réception									 				  *
+******************************************************************************/
+
+void HAL_UART_ErrorCallback (UART_HandleTypeDef * huart)
+{
+	if(&huart1 == huart)
+	{
+		HAL_UART_Receive_IT(&huart1, Rx_data, 19);
+	}
+}
+
 
 /* USER CODE END 4 */
 

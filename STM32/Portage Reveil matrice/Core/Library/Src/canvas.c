@@ -118,7 +118,7 @@ void drawImage(ImageData* imageData, int frame, int x, int y, Canvas* canvas) {
     for (int imgY = 0; imgY < imageData->height; imgY++) {
         for (int imgX = 0; imgX < imageData->width; imgX++) {
         	//									sel ligne	        + sel col * decal RGB + decal image
-            uint8_t* pixel = &imageData->data[(imgY * imageData->width + imgX) * 3     /* + imageData->height*imageData->width*3*(frame)*/];  // BGR format
+            uint8_t* pixel = &imageData->data[(imgY * imageData->width + imgX) * 3      + imageData->height*imageData->width*3*(frame)];  // BGR format
 /* alpha always max
             // Ignore les pixels totalement transparents (canal alpha à zéro)
             if (pixel[3] == 0x00) {
