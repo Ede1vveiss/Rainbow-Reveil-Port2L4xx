@@ -19,6 +19,7 @@ typedef struct {
 } ImageData;
 
 typedef struct {
+	uint8_t BitMask;		// Mask pour n nombre de bits
 	uint8_t LineLen;		// nombre de uint8 sur 1 ligne
     uint16_t width;     // Largeur de l'image
     uint16_t totalheight;   // Hauteur de toutes les images
@@ -26,7 +27,9 @@ typedef struct {
     uint8_t* data;      // Tableau de données de l'image (Indexed 2 bit)
 } IndexedImageData;
 
-extern IndexedImageData BadApple;
+extern IndexedImageData BadApple_1bit;
+extern IndexedImageData BadApple_2bit;
+extern IndexedImageData BadApple_4bit;
 extern ImageData NotPickleRick;
 
 #endif /* LIBRARY_INC_IMAGE_DATA_H_ */

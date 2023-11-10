@@ -1,4 +1,6 @@
-"./Core/Library/Src/BadApple_data.o"
+"./Core/Library/Src/BadApple_1bit_data.o"
+"./Core/Library/Src/BadApple_2bit_data.o"
+"./Core/Library/Src/BadApple_4bit_data.o"
 "./Core/Library/Src/NotPickleRick_data.o"
 "./Core/Library/Src/canvas.o"
 "./Core/Library/Src/color.o"

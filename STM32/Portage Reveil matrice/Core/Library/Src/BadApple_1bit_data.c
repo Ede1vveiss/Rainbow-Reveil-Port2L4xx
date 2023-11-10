@@ -15,7 +15,8 @@
 
 
 
-IndexedImageData BadApple = {
+IndexedImageData BadApple_1bit = {
+	.BitMask = 0x01,		// Mask pour 1 bit
 	.LineLen = 3,			// Nombre de uint8 sur 1 ligne
     .width = 19,        	// Largeur d'une image (en pixels)
 	.totalheight = 1172,    // Hauteur de toutes les images ensemble (en pixels)

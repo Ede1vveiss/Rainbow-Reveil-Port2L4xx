@@ -6,4 +6,4 @@ canvas.c:52:6:drawRectangle	13
 canvas.c:76:6:displayBCD	10
 canvas.c:108:6:drawImage	9
 canvas.c:154:6:drawIndexedImage	3
-canvas.c:177:6:convertIndexedToRGBA	4
+canvas.c:202:6:convertIndexedToRGBA	11

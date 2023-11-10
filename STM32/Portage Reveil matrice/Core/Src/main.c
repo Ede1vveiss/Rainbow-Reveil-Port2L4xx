@@ -83,6 +83,7 @@ uint8_t interrupteur3_OLD = 0;
 uint8_t interrupteur4_OLD = 0;
 
 static uint8_t Rx_data[19];
+uint16_t testData = 0;
 
 uint16_t step = 0;
 uint16_t loop = 0;
@@ -162,23 +163,28 @@ int main(void)
 
 
 
-	  //for(uint8_t diag=1; diag<=23; diag++){
-	  //		  colorDiagonal(&myCanvas, HSVtoPixel((H + (diag* 255 / 23))%255 , MAX_LUX), diag);
-	  //	  }
+
+	  for(uint8_t diag=1; diag<=23; diag++){
+	  		  colorDiagonal(&myCanvas, HSVtoPixel((H + (diag* 255 / 23))%255 , MAX_LUX), diag);
+	  	  }
 
 	  	  //drawRectangle(&myCanvas, 19, 5, 1, 1, (Pixel){0,0,0}, (Pixel){0,0,0});
+/*
+	  	  displayBCD(&myCanvas, 1, 5, Heures_D, 4);
+	  	  displayBCD(&myCanvas, 1, 4, Heures_U, 4);
+	  	  displayBCD(&myCanvas, 1, 2, Minutes_D, 4);
+	  	  displayBCD(&myCanvas, 1, 1, Minutes_U, 4);
 
-	  	  displayBCD(&myCanvas, 8, 3, Minutes_U, 4);
-
-
+	  	  displayBCD(&myCanvas, 2, 3, testData, 16);
+*/
 
 	  	  //pacManSprite = &NotPickleRick;
-	  	  //IndexedSprite = &BadApple;
+	  	  IndexedSprite = &BadApple_4bit;
 
 
 	  	  //drawImage(pacManSprite, (loop/2)%98, 1, 1, &myCanvas);
 
-	  	  //drawIndexedImage(IndexedSprite, (loop/4), 1, 1, &myCanvas);
+	  	  drawIndexedImage(IndexedSprite, (loop/4), 1, 1, &myCanvas);
 
 
 
@@ -465,6 +471,7 @@ void HAL_UART_RxCpltCallback (UART_HandleTypeDef * huart)
 
 	if(&huart1 == huart)
 	{
+		testData = Rx_data[14];		//Stock data fonction
 		Heures_brt = Rx_data[4];	//Stock le data des heures, "brt" = brute
 		Minutes_brt = Rx_data[5];	//Stock le data des minutes
 
