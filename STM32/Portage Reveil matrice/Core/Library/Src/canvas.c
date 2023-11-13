@@ -139,6 +139,12 @@ void drawImage(ImageData* imageData, int frame, int x, int y, Canvas* canvas) {
                 canvasPixel->R = (pixel[2] * pixel[3] + canvasPixel->R * (255 - pixel[3])) / 255;
 				canvasPixel->G = (pixel[1] * pixel[3] + canvasPixel->G * (255 - pixel[3])) / 255;
 				canvasPixel->B = (pixel[0] * pixel[3] + canvasPixel->B * (255 - pixel[3])) / 255;
+
+				//sans aspect transparence de alpha
+/*				canvasPixel->R = pixel[2];
+				canvasPixel->G = pixel[1];
+				canvasPixel->B = pixel[0];*/
+
                 // Appliquer le masque pour forcer les valeurs à être paires
                 canvasPixel->R &= 0xFE; // Le masque 0xFE force le dernier bit à 0.
                 canvasPixel->G &= 0xFE;
@@ -165,38 +171,6 @@ void drawIndexedImage(IndexedImageData* indexedImage, int frame, int x, int y, C
     free(rgbaImage.data);
 }
 
-// Define the color palette
-const uint8_t colorPalette[] = {//inversé pour alpha		currently alpha
-	  // 4 bit
-	  0xff,  	//Color of index 0
-	  0xff,  	//Color of index 1
-	  0xff, 	//Color of index 2
-	  0xff,  	//Color of index 3
-	  0xff, 	//Color of index 4
-	  0xb3, 	//Color of index 5
-	  0x9f,		//Color of index 6
-	  0x89,		//Color of index 7
-	  0x73, 	//Color of index 8
-	  0x5e, 	//Color of index 9
-	  0x4a,  	//Color of index 10
-	  0x00,  	//Color of index 11
-	  0x00,  	//Color of index 12
-	  0x00,  	//Color of index 13
-	  0x00,  	//Color of index 14
-	  0x00,  	//Color of index 15
-	  /*
-		// 1 bit
-	  0xff,	 	// Color of index 0
-	  0x00, 	// Color of index 1
-
-		// 2 bit
-      0xff,  	//Color of index 0
-	  0xa5,  	//Color of index 1
-	  0x10,  	//Color of index 2
-	  0x00,  	//Color of index 3
-*/
-
-};
 
 //Rajout par EFV
 void convertIndexedToRGBA(IndexedImageData* indexedImage, int frame, ImageData* rgbaImage) {
@@ -210,7 +184,7 @@ void convertIndexedToRGBA(IndexedImageData* indexedImage, int frame, ImageData* 
     			uint16_t DecalFrame = indexedImage->LineLen * indexedImage->height * frame;		// offset for frame selection
     			uint8_t HoriProg = i;			// Horizontal progress
     			uint8_t DecalDeBit = 0;
-    			switch (indexedImage->BitMask){			//switch case pour la sélection de décalage de bit
+    			/*switch (indexedImage->BitMask){			//switch case pour la sélection de décalage de bit
     			case 0x01 :
     				DecalDeBit = 7 - i % 8;		// amount of bits to move to the right ONLY FOR 1bit index
     				HoriProg = i / 8;			// Horizontal progress
@@ -229,13 +203,16 @@ void convertIndexedToRGBA(IndexedImageData* indexedImage, int frame, ImageData* 
     			case 0xff :		//
     				DecalDeBit = 0;
     				HoriProg = i;			// Horizontal progress
-    			}
+    			}*/
     			uint8_t index = (indexedImage->data[HoriProg + DecalFrame+VertProg] >> DecalDeBit) & indexedImage->BitMask;
-    			uint32_t color = colorPalette[index];
-    			rgbaImage->data[(i+19*j) * 4] = 0x00;
-    			rgbaImage->data[(i+19*j) * 4 + 1] = 0x00;
-    			rgbaImage->data[(i+19*j) * 4 + 2] = 0x00;
-    			rgbaImage->data[(i+19*j) * 4 + 3] = color^0xff;
+    			uint8_t Red = indexedImage->ColorPalette[index*4];
+    			uint8_t Green = indexedImage->ColorPalette[index*4 +1];
+    			uint8_t Blue = indexedImage->ColorPalette[index*4 +2];
+    			uint8_t Alpha = indexedImage->ColorPalette[index*4 +3];
+    			rgbaImage->data[(i+19*j) * 4] = Red;
+    			rgbaImage->data[(i+19*j) * 4 + 1] = Green;
+    			rgbaImage->data[(i+19*j) * 4 + 2] = Blue;
+    			rgbaImage->data[(i+19*j) * 4 + 3] = Alpha;
     		}
     }
 }

@@ -5,5 +5,5 @@
 ../Core/Library/Src/canvas.c:52:6:drawRectangle	32	static
 ../Core/Library/Src/canvas.c:76:6:displayBCD	40	static
 ../Core/Library/Src/canvas.c:108:6:drawImage	48	static
-../Core/Library/Src/canvas.c:154:6:drawIndexedImage	48	static
-../Core/Library/Src/canvas.c:202:6:convertIndexedToRGBA	48	static
+../Core/Library/Src/canvas.c:160:6:drawIndexedImage	48	static
+../Core/Library/Src/canvas.c:176:6:convertIndexedToRGBA	48	static

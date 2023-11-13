@@ -84,6 +84,7 @@ uint8_t interrupteur4_OLD = 0;
 
 static uint8_t Rx_data[19];
 uint16_t testData = 0;
+uint8_t Alarm = 0;
 
 uint16_t step = 0;
 uint16_t loop = 0;
@@ -164,9 +165,7 @@ int main(void)
 
 
 
-	  for(uint8_t diag=1; diag<=23; diag++){
-	  		  colorDiagonal(&myCanvas, HSVtoPixel((H + (diag* 255 / 23))%255 , MAX_LUX), diag);
-	  	  }
+
 
 	  	  //drawRectangle(&myCanvas, 19, 5, 1, 1, (Pixel){0,0,0}, (Pixel){0,0,0});
 /*
@@ -178,28 +177,43 @@ int main(void)
 	  	  displayBCD(&myCanvas, 2, 3, testData, 16);
 */
 
-	  	  //pacManSprite = &NotPickleRick;
-	  	  IndexedSprite = &BadApple_4bit;
+
+	  //if (Alarm){
+		  IndexedSprite = &NotPickleRickIndexed;
+		  drawIndexedImage(IndexedSprite, (loop/5)%98, 1, 1, &myCanvas);
+
+	 // }
+
+	 // else {
+/*
+		  IndexedSprite = &BadApple_2bit_7dot5fps;
 
 
-	  	  //drawImage(pacManSprite, (loop/2)%98, 1, 1, &myCanvas);
 
-	  	  drawIndexedImage(IndexedSprite, (loop/4), 1, 1, &myCanvas);
+		  	  	//  for(uint8_t diag=1; diag<=23; diag++){
+		  //	  		  		  colorDiagonal(&myCanvas, HSVtoPixel((H + (diag* 255 / 23))%255 , MAX_LUX), diag);
+		  	  	//	  	  }
 
+		  	  	  drawIndexedImage(IndexedSprite, (loop/5), 1, 1, &myCanvas);
+
+		  	  	  if (H >= 255){
+		  	  		  		  H=0;
+
+		  	  		  	  }
+		  	  		  	  else{
+		  	  		  		  H++;
+		  	  		  	  }
+
+
+
+	 // }*/
+if (loop <= IndexedSprite->FrameAmount *5)	loop++;
+		  	  		  	  else loop = 0;
 
 
 	  	  sendCanvas(&myCanvas);
 
-	  	  if (H >= 255){
-	  		  H=0;
 
-	  	  }
-	  	  else{
-	  		  H++;
-	  	  }
-
-	  	  if (loop <= 4688)	loop++;
-	  	  else loop = 0;
   
 		  if(HAL_UART_Receive_IT(&huart1, Rx_data, 19) != HAL_BUSY)				//I'm guessing this is the 1min update thing
 		  {
@@ -471,9 +485,11 @@ void HAL_UART_RxCpltCallback (UART_HandleTypeDef * huart)
 
 	if(&huart1 == huart)
 	{
-		testData = Rx_data[14];		//Stock data fonction
+		testData = Rx_data[3];		//Stock data fonction
 		Heures_brt = Rx_data[4];	//Stock le data des heures, "brt" = brute
 		Minutes_brt = Rx_data[5];	//Stock le data des minutes
+
+		Alarm = (testData >> 3) &0x01;		// Alarm Status
 
 		Heures_U = Heures_brt & 0x0F;	//Traite le data pour avoir l'Unité des Heures
 
