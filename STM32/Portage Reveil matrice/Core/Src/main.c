@@ -86,8 +86,15 @@ static uint8_t Rx_data[19];
 uint16_t testData = 0;
 uint8_t Alarm = 0;
 
-uint16_t step = 0;
-uint16_t loop = 0;
+uint16_t ui16_step = 0;
+uint16_t ui16_loop = 0;
+
+uint8_t ui8_Rx_2 = 0;
+uint8_t ui8_Rx_3 = 0;
+uint8_t ui8_Rx_11 = 0;
+uint8_t ui8_Rx_12 = 0;
+
+uint16_t ReadADC = 0;
 
 
 
@@ -128,9 +135,10 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   ws2812_start();
-  //HAL_UART_Receive_IT(&huart1, Rx_data, 19);
+  HAL_UART_Receive_IT(&huart1, Rx_data, 19);
 
 	uint8_t H =0;
+	uint16_t FctLum=255;
 	ImageData* pacManSprite;
 	IndexedImageData* IndexedSprite;
 	// Déclarez une instance de Canvas
@@ -146,6 +154,8 @@ int main(void)
 	// Vous pouvez maintenant utiliser myCanvas et les pixels initialisé
 
 
+	/* start ADC */
+
 
   /* USER CODE END 2 */
 
@@ -156,45 +166,60 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	
-	
-//	  HAL_ADC_PollForConversion(&hadc, HAL_MAX_DELAY);
-//
-//	  ReadADC = HAL_ADC_GetValue(&hadc);
 
+		HAL_ADC_Start(&hadc1);
+		//HAL_ADC_PollForConversion(&hadc1, 1000);
+	  ReadADC = HAL_ADC_GetValue(&hadc1);
 
+	 // HAL_ADC_Stop(&hadc1);
 
-
-
-
-	  	  //drawRectangle(&myCanvas, 19, 5, 1, 1, (Pixel){0,0,0}, (Pixel){0,0,0});
-/*
-	  	  displayBCD(&myCanvas, 1, 5, Heures_D, 4);
-	  	  displayBCD(&myCanvas, 1, 4, Heures_U, 4);
-	  	  displayBCD(&myCanvas, 1, 2, Minutes_D, 4);
-	  	  displayBCD(&myCanvas, 1, 1, Minutes_U, 4);
-
-	  	  displayBCD(&myCanvas, 2, 3, testData, 16);
-*/
-
-
-	  //if (Alarm){
+	  if (Alarm){
 		  IndexedSprite = &NotPickleRickIndexed;
-		  drawIndexedImage(IndexedSprite, (loop/5)%98, 1, 1, &myCanvas);
+		  drawIndexedImage(IndexedSprite, (ui16_loop/2)%98, 1, 1, &myCanvas);
+	  }
 
-	 // }
+	  else{
+		  FctLum = ReadADC/20 + 50;
+	  	  setCanvasColor(&myCanvas, (Pixel){51*FctLum/255, 0*FctLum/255, 77*FctLum/255});
+	  	  //drawRectangle(&myCanvas, 19, 5, 1, 1, (Pixel){0,0,0}, (Pixel){0,0,0});
 
-	 // else {
-/*
+	  	  // display temps en BCD
+	  	  displayBCD(&myCanvas, 1, 4, Heures_D, 4, FctLum);
+		  displayBCD(&myCanvas, 1, 3, Heures_D, 4, FctLum);
+		  displayBCD(&myCanvas, 1, 2, Heures_D, 4, FctLum);
+
+		  displayBCD(&myCanvas, 6, 4, Heures_U, 4, FctLum);
+		  displayBCD(&myCanvas, 6, 3, Heures_U, 4, FctLum);
+		  displayBCD(&myCanvas, 6, 2, Heures_U, 4, FctLum);
+
+		  displayBCD(&myCanvas, 11, 4, Minutes_D, 4, FctLum);
+		  displayBCD(&myCanvas, 11, 3, Minutes_D, 4, FctLum);
+		  displayBCD(&myCanvas, 11, 2, Minutes_D, 4, FctLum);
+
+		  displayBCD(&myCanvas, 16, 4, Minutes_U, 4, FctLum);
+		  displayBCD(&myCanvas, 16, 3, Minutes_U, 4, FctLum);
+		  displayBCD(&myCanvas, 16, 2, Minutes_U, 4, FctLum);
+
+
+
+		  //autre
+		  // displayBCD(&myCanvas, 1, 3, ui8_Rx_2, 8, FctLum);
+		  // displayBCD(&myCanvas, 10, 3, ui8_Rx_3, 8, FctLum);
+
+		  // displayBCD(&myCanvas, 6, 4, ui8_Rx_11, 8, FctLum);
+		  // displayBCD(&myCanvas, 6, 1, ui8_Rx_12, 8, FctLum);
+
+
+		  // displayBCD(&myCanvas, 2, 3, ReadADC, 16, FctLum);
+
+
 		  IndexedSprite = &BadApple_2bit_7dot5fps;
+		  drawIndexedImage(IndexedSprite, (ui16_loop/5), 1, 1, &myCanvas);
 
-
-
-		  	  	//  for(uint8_t diag=1; diag<=23; diag++){
-		  //	  		  		  colorDiagonal(&myCanvas, HSVtoPixel((H + (diag* 255 / 23))%255 , MAX_LUX), diag);
-		  	  	//	  	  }
-
-		  	  	  drawIndexedImage(IndexedSprite, (loop/5), 1, 1, &myCanvas);
+/*
+		  	  	  for(uint8_t diag=1; diag<=23; diag++){
+		  	  		  		  colorDiagonal(&myCanvas, HSVtoPixel((H + (diag* 255 / 23))%255 , MAX_LUX), diag);
+		  	    	  }
 
 		  	  	  if (H >= 255){
 		  	  		  		  H=0;
@@ -203,22 +228,32 @@ int main(void)
 		  	  		  	  else{
 		  	  		  		  H++;
 		  	  		  	  }
+		  */
+	  }
 
 
 
-	 // }*/
-if (loop <= IndexedSprite->FrameAmount *5)	loop++;
-		  	  		  	  else loop = 0;
+
+
+
+
+
+
+	 // else {
+
+
+
+
+
+
+
+		  if (ui16_loop <= IndexedSprite->FrameAmount *2)	ui16_loop++;
+		  else ui16_loop = 0;
 
 
 	  	  sendCanvas(&myCanvas);
 
 
-  
-		  if(HAL_UART_Receive_IT(&huart1, Rx_data, 19) != HAL_BUSY)				//I'm guessing this is the 1min update thing
-		  {
-			  HAL_UART_Receive_IT(&huart1, Rx_data, 19);
-		  }
 
   }
   /* USER CODE END 3 */
@@ -294,7 +329,7 @@ static void MX_ADC1_Init(void)
   hadc1.Init.ScanConvMode = ADC_SCAN_DISABLE;
   hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   hadc1.Init.LowPowerAutoWait = DISABLE;
-  hadc1.Init.ContinuousConvMode = ENABLE;
+  hadc1.Init.ContinuousConvMode = DISABLE;
   hadc1.Init.NbrOfConversion = 1;
   hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
@@ -488,6 +523,11 @@ void HAL_UART_RxCpltCallback (UART_HandleTypeDef * huart)
 		testData = Rx_data[3];		//Stock data fonction
 		Heures_brt = Rx_data[4];	//Stock le data des heures, "brt" = brute
 		Minutes_brt = Rx_data[5];	//Stock le data des minutes
+
+		ui8_Rx_2 = Rx_data[2];
+		ui8_Rx_3 = Rx_data[3];
+		ui8_Rx_11 = Rx_data[11];
+		ui8_Rx_12 = Rx_data[12];
 
 		Alarm = (testData >> 3) &0x01;		// Alarm Status
 

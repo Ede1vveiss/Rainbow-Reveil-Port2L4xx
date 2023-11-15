@@ -6,6 +6,10 @@
  */
 #include "includes.h"
 
+
+extern int facteurLuminosite;
+
+
 void setCanvasColor(Canvas* canvas, Pixel encre) {
 for (uint16_t i = 0; i < canvas->numCols * canvas->numRows; i++) {
 		canvas->pixels[i]=encre;
@@ -15,10 +19,11 @@ for (uint16_t i = 0; i < canvas->numCols * canvas->numRows; i++) {
 
 
 // Fonction pour mettre à jour l'affichage LED
+//modif EFV rajout mask pour bit lsb impaire
 void sendCanvas(Canvas* canvas) {
     // Copiez les pixels du canevas vers l'écran LED
     for (uint16_t i = 0; i < canvas->numCols * canvas->numRows -1; i++) {  // -1 car résolution bug affichage photodiode inexistante
-        setLEDcolor(i, canvas -> pixels[i].R, canvas -> pixels[i].G, canvas -> pixels[i].B);
+        setLEDcolor(i, (canvas -> pixels[i].R) &0xfe, (canvas -> pixels[i].G) &0xfe, (canvas -> pixels[i].B) &0xfe);
     }
 }
 
@@ -73,7 +78,7 @@ void drawRectangle(Canvas* canvas, int W,int H, int X, int Y, Pixel BorderInk, P
 }
 
 // Fonction pour afficher un chiffre en BCD
-void displayBCD(Canvas* canvas, int X, int Y, int BCD, int NbDeBitAffiches) {
+void displayBCD(Canvas* canvas, int X, int Y, int BCD, int NbDeBitAffiches, int facteurLuminosite) {
     if (canvas == NULL || X < 0 || Y < 0 || BCD < 0 || NbDeBitAffiches <= 0) {
         // Vérifiez les paramètres d'entrée valides
         return;
@@ -87,18 +92,18 @@ void displayBCD(Canvas* canvas, int X, int Y, int BCD, int NbDeBitAffiches) {
                 // Afficher un 1 (blanc)
                 Pixel* pixel = getPixel(canvas, j, Y);
                 if (pixel != NULL) {
-                    pixel->R = MAX_LUX;
-                    pixel->G = MAX_LUX;
-                    pixel->B = MAX_LUX;
+                    pixel->R = (facteurLuminosite* 254)/255;			//modif was MAX_LUX
+                    pixel->G = (facteurLuminosite* 178)/255;			//modif was MAX_LUX
+                    pixel->B = (facteurLuminosite* 24)/255;			//modif was MAX_LUX
                 }
             }
             else{
             	//afficher un 0 (noir)
             	Pixel* pixel = getPixel(canvas, j, Y);
             	if (pixel != NULL) {
-            		pixel->R = 0;
-                    pixel->G = 0;
-                    pixel->B = 0;
+            		pixel->R = (facteurLuminosite* 51)/255;			//modif was 0
+                    pixel->G = (facteurLuminosite* 0)/255;			//modif was 0
+                    pixel->B = (facteurLuminosite* 77)/255;			//modif was 0
             	}
             }
             mask >>= 1;
@@ -106,9 +111,6 @@ void displayBCD(Canvas* canvas, int X, int Y, int BCD, int NbDeBitAffiches) {
 }
 
 void drawImage(ImageData* imageData, int frame, int x, int y, Canvas* canvas) {
-
-//*****************	DECODAGE INDEXED 2BIT	*****************************/
-
 
     if (imageData == NULL || canvas == NULL) {
         // Gérez les cas d'erreur ou de paramètres non valides, si nécessaire
@@ -118,7 +120,7 @@ void drawImage(ImageData* imageData, int frame, int x, int y, Canvas* canvas) {
     for (int imgY = 0; imgY < imageData->height; imgY++) {
         for (int imgX = 0; imgX < imageData->width; imgX++) {
         	//									sel ligne	        + sel col * decal RGB + decal image
-            uint8_t* pixel = &imageData->data[(imgY * imageData->width + imgX) * 4      + imageData->height*imageData->width*4*(frame)];  // BGR format
+            uint8_t* pixel = &imageData->data[(imgY * imageData->width + imgX) * 4      + imageData->height*imageData->width*4*(frame)];  // BGRA format
 /* alpha always max
             // Ignore les pixels totalement transparents (canal alpha à zéro)
             if (pixel[3] == 0x00) {
@@ -184,7 +186,7 @@ void convertIndexedToRGBA(IndexedImageData* indexedImage, int frame, ImageData* 
     			uint16_t DecalFrame = indexedImage->LineLen * indexedImage->height * frame;		// offset for frame selection
     			uint8_t HoriProg = i;			// Horizontal progress
     			uint8_t DecalDeBit = 0;
-    			/*switch (indexedImage->BitMask){			//switch case pour la sélection de décalage de bit
+    			switch (indexedImage->BitMask){			//switch case pour la sélection de décalage de bit
     			case 0x01 :
     				DecalDeBit = 7 - i % 8;		// amount of bits to move to the right ONLY FOR 1bit index
     				HoriProg = i / 8;			// Horizontal progress
@@ -203,7 +205,7 @@ void convertIndexedToRGBA(IndexedImageData* indexedImage, int frame, ImageData* 
     			case 0xff :		//
     				DecalDeBit = 0;
     				HoriProg = i;			// Horizontal progress
-    			}*/
+    			}
     			uint8_t index = (indexedImage->data[HoriProg + DecalFrame+VertProg] >> DecalDeBit) & indexedImage->BitMask;
     			uint8_t Red = indexedImage->ColorPalette[index*4];
     			uint8_t Green = indexedImage->ColorPalette[index*4 +1];

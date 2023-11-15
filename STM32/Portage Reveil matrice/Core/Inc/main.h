@@ -50,6 +50,9 @@ extern "C" {
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 
+void HAL_UART_RxCpltCallback (UART_HandleTypeDef * huart);
+void HAL_UART_ErrorCallback (UART_HandleTypeDef * huart);
+
 /* USER CODE END EM */
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);

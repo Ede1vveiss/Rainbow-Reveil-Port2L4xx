@@ -3,7 +3,7 @@
  * BadApple_data.c
  *
  *  Created on: 3 nov. 2023
- *      Author: Eden Wegger Funderskov
+ *      Author: Eden W. Funderskov
  */
 
 #include "includes.h"
@@ -15,10 +15,7 @@
  * 		- 4 bits 	Bitmask = 0x0f
  * 		- 8 bits 	BitMask = 0xff
  *
- *
  */
-
-
 
 IndexedImageData BadApple_2bit_7dot5fps = {
 	.BitMask = 0x03,		// Mask pour 2 bits
@@ -27,10 +24,10 @@ IndexedImageData BadApple_2bit_7dot5fps = {
 	.FrameAmount = 1643,    // Quantité d'images dans l'animation
     .height = 5,       		// Hauteur d'une image (en pixels)
 	.ColorPalette = (uint8_t[]){
-		0xff, 0x00, 0x00, 0xff,  	//Color of index 0
-	  0x00, 0xff,0x00, 0xa7,  	//Color of index 1
-	  0x00, 0x00, 0xff, 0x10,  	//Color of index 2
-	  0x00, 0x00, 0x00, 0x00,  	//Color of index 3
+		0x00, 0x00, 0x00, 0x00,  	//Color of index 0
+		0x00, 0x00,0x00, 0x10,  	//Color of index 1
+		0x00, 0x00, 0x00, 0xa7,  	//Color of index 2
+		0x00, 0x00, 0x00, 0xff,  	//Color of index 3
 	},
     .data = (uint8_t[]) {
 		0xff, 0xff, 0xff, 0xff, 0xfc,

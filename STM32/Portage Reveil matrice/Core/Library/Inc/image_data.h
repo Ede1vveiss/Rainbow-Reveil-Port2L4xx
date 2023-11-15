@@ -18,6 +18,14 @@ typedef struct {
     uint8_t* data;      	// Tableau de données de l'image (RGBA ou autre)
 } ImageData;
 
+/*
+ * Pour l'indexé, BitMask varie selon le nombre de bits
+ * 		- 1 bit  	BitMask = 0x01
+ * 		- 2 bits  	Bitmask = 0x03
+ * 		- 4 bits 	Bitmask = 0x0f
+ * 		- 8 bits 	BitMask = 0xff
+ *
+ */
 typedef struct {
 	uint8_t BitMask;		// Mask pour n nombre de bits
 	uint8_t LineLen;		// nombre de uint8 sur 1 ligne dans le tableau .data

@@ -34,7 +34,7 @@ void sendCanvas(Canvas* canvas);
 Pixel* getPixel(Canvas* canvas, int x, int y);
 void colorDiagonal(Canvas* canvas, Pixel encre, uint8_t diagSum);
 void drawRectangle(Canvas* canvas, int W, int H, int X, int Y, Pixel BorderInk, Pixel FillInk);
-void displayBCD(Canvas* canvas, int X, int Y, int BCD, int NbDeBitAffiches);
+void displayBCD(Canvas* canvas, int X, int Y, int BCD, int NbDeBitAffiches, int facteurLuminosite);
 void drawImage(ImageData* imageData, int frame, int x, int y, Canvas* canvas);
 
 void drawIndexedImage(IndexedImageData* indexedImage, int frame, int x, int y, Canvas* canvas);

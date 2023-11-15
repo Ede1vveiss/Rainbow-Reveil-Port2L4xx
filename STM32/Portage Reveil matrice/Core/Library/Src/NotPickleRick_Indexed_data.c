@@ -3,10 +3,19 @@
  * NotPickleRick_data.c
  *
  *  Created on: 10 nov. 2023
- *      Author: Eden Wegger Funderskov
+ *      Author: Eden W. Funderskov
  */
 
 #include "includes.h"
+
+/*
+ * Pour l'indexé, BitMask varie selon le nombre de bits
+ * 		- 1 bit  	BitMask = 0x01
+ * 		- 2 bits  	Bitmask = 0x03
+ * 		- 4 bits 	Bitmask = 0x0f
+ * 		- 8 bits 	BitMask = 0xff
+ *
+ */
 
 IndexedImageData NotPickleRickIndexed = {
 	.BitMask = 0xff,		// Mask pour 2 bits
