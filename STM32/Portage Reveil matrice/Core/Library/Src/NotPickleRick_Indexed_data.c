@@ -9,7 +9,7 @@
 #include "includes.h"
 
 /*
- * Pour l'indexé, BitMask varie selon le nombre de bits
+ * Pour le format de couleurs indexé (CF_INDEXED_x_BITS), BitMask varie selon le nombre de bits choisi
  * 		- 1 bit  	BitMask = 0x01
  * 		- 2 bits  	Bitmask = 0x03
  * 		- 4 bits 	Bitmask = 0x0f
@@ -18,10 +18,10 @@
  */
 
 IndexedImageData NotPickleRickIndexed = {
-	.BitMask = 0xff,		// Mask pour 2 bits
+	.BitMask = 0xff,		// Mask pour 8 bits (CF_INDEXED_8_BITS)
 	.LineLen = 19,			// Nombre de uint8 sur 1 ligne dans le tableau .data
     .width = 19,        	// Largeur d'une image (en pixels)
-	.FrameAmount = 98,    // Quantité d'images dans l'animation
+	.FrameAmount = 98,    	// Quantité d'images dans l'animation
     .height = 5,       		// Hauteur d'une image (en pixels)
 	.ColorPalette = (uint8_t[]){
 			 0xb9, 0xb1, 0xd4, 0xff, 	/*Color of index 0*/

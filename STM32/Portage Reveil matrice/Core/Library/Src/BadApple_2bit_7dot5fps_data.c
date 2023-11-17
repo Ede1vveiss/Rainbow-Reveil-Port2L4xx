@@ -9,7 +9,7 @@
 #include "includes.h"
 
 /*
- * Pour l'indexé, BitMask varie selon le nombre de bits
+ * Pour le format de couleurs indexé (CF_INDEXED_x_BITS), BitMask varie selon le nombre de bits choisi
  * 		- 1 bit  	BitMask = 0x01
  * 		- 2 bits  	Bitmask = 0x03
  * 		- 4 bits 	Bitmask = 0x0f
@@ -18,7 +18,7 @@
  */
 
 IndexedImageData BadApple_2bit_7dot5fps = {
-	.BitMask = 0x03,		// Mask pour 2 bits
+	.BitMask = 0x03,		// Mask pour 2 bits (CF_INDEXED_n_BITS)
 	.LineLen = 5,			// Nombre de uint8 sur 1 ligne dans le tableau .data
     .width = 19,        	// Largeur d'une image (en pixels)
 	.FrameAmount = 1643,    // Quantité d'images dans l'animation

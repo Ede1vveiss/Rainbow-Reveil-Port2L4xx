@@ -3,6 +3,7 @@
  *
  *  Created on: 9 oct. 2023
  *      Author: alyvasseur
+ *		Modif : Eden W. Funderskov
  */
 #include "includes.h"
 
@@ -92,8 +93,8 @@ void displayBCD(Canvas* canvas, int X, int Y, int BCD, int NbDeBitAffiches, int 
                 // Afficher un 1 (blanc)
                 Pixel* pixel = getPixel(canvas, j, Y);
                 if (pixel != NULL) {
-                    pixel->R = (facteurLuminosite* 254)/255;			//modif was MAX_LUX
-                    pixel->G = (facteurLuminosite* 178)/255;			//modif was MAX_LUX
+                    pixel->R = (facteurLuminosite* 254)/255;		//modif was MAX_LUX
+                    pixel->G = (facteurLuminosite* 178)/255;		//modif was MAX_LUX
                     pixel->B = (facteurLuminosite* 24)/255;			//modif was MAX_LUX
                 }
             }
@@ -116,17 +117,17 @@ void drawImage(ImageData* imageData, int frame, int x, int y, Canvas* canvas) {
         // Gérez les cas d'erreur ou de paramètres non valides, si nécessaire
         return;
     }
-/*********  modif EFV pour alpha toujours MAX  ****************/
+	
     for (int imgY = 0; imgY < imageData->height; imgY++) {
         for (int imgX = 0; imgX < imageData->width; imgX++) {
         	//									sel ligne	        + sel col * decal RGB + decal image
             uint8_t* pixel = &imageData->data[(imgY * imageData->width + imgX) * 4      + imageData->height*imageData->width*4*(frame)];  // BGRA format
-/* alpha always max
+
             // Ignore les pixels totalement transparents (canal alpha à zéro)
             if (pixel[3] == 0x00) {
                 continue;
             }
-*/
+
             int canvasX = x + imgX;  // Coordonnée X sur le canevas
             int canvasY = y + (imageData->height - 1) - imgY;  // Coordonnée Y sur le canevas
 
@@ -146,12 +147,12 @@ void drawImage(ImageData* imageData, int frame, int x, int y, Canvas* canvas) {
 /*				canvasPixel->R = pixel[2];
 				canvasPixel->G = pixel[1];
 				canvasPixel->B = pixel[0];*/
-
+/*	cette partie est maintenant faite dans sendCanvas() -EFV
                 // Appliquer le masque pour forcer les valeurs à être paires
                 canvasPixel->R &= 0xFE; // Le masque 0xFE force le dernier bit à 0.
                 canvasPixel->G &= 0xFE;
                 canvasPixel->B &= 0xFE;
-
+*/
             }
         }
     }

@@ -138,7 +138,7 @@ int main(void)
   HAL_UART_Receive_IT(&huart1, Rx_data, 19);
 
 	uint8_t H =0;
-	uint16_t FctLum=255;
+	uint16_t ui16_FctLum=255;
 	ImageData* pacManSprite;
 	IndexedImageData* IndexedSprite;
 	// Déclarez une instance de Canvas
@@ -150,12 +150,7 @@ int main(void)
 	myCanvas.pixels = malloc(sizeof(Pixel) * NUM_COLS * NUM_ROWS);
 	// Utilisez memset pour initialiser le tableau à zéro
 	memset(myCanvas.pixels, 0, sizeof(Pixel) * NUM_COLS * NUM_ROWS);
-
 	// Vous pouvez maintenant utiliser myCanvas et les pixels initialisé
-
-
-	/* start ADC */
-
 
   /* USER CODE END 2 */
 
@@ -166,95 +161,68 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
-		HAL_ADC_Start(&hadc1);
-		//HAL_ADC_PollForConversion(&hadc1, 1000);
+	  /* start ADC */
+	  HAL_ADC_Start(&hadc1);
 	  ReadADC = HAL_ADC_GetValue(&hadc1);
 
-	 // HAL_ADC_Stop(&hadc1);
-
+	  // activation alarme
 	  if (Alarm){
 		  IndexedSprite = &NotPickleRickIndexed;
 		  drawIndexedImage(IndexedSprite, (ui16_loop/2)%98, 1, 1, &myCanvas);
 	  }
 
 	  else{
-		  FctLum = ReadADC/20 + 50;
-	  	  setCanvasColor(&myCanvas, (Pixel){51*FctLum/255, 0*FctLum/255, 77*FctLum/255});
-	  	  //drawRectangle(&myCanvas, 19, 5, 1, 1, (Pixel){0,0,0}, (Pixel){0,0,0});
+		  // Contrôle luminosité et background
+		  ui16_FctLum = ReadADC/20 + 50;
+	  	  setCanvasColor(&myCanvas, (Pixel){51*ui16_FctLum/255, 0*ui16_FctLum/255, 77*ui16_FctLum/255});
+
+/*			// effet arc en ciel
+		  for(uint8_t diag=1; diag<=23; diag++){
+					  colorDiagonal(&myCanvas, HSVtoPixel((H + (diag* 255 / 23))%255 , MAX_LUX), diag);
+			  }
+		  if (H >= 255) H=0;
+				  else  H++;
+		  */
 
 	  	  // display temps en BCD
-	  	  displayBCD(&myCanvas, 1, 4, Heures_D, 4, FctLum);
-		  displayBCD(&myCanvas, 1, 3, Heures_D, 4, FctLum);
-		  displayBCD(&myCanvas, 1, 2, Heures_D, 4, FctLum);
+	  	  displayBCD(&myCanvas, 1, 4, Heures_D, 4, ui16_FctLum);
+		  displayBCD(&myCanvas, 1, 3, Heures_D, 4, ui16_FctLum);
+		  displayBCD(&myCanvas, 1, 2, Heures_D, 4, ui16_FctLum);
 
-		  displayBCD(&myCanvas, 6, 4, Heures_U, 4, FctLum);
-		  displayBCD(&myCanvas, 6, 3, Heures_U, 4, FctLum);
-		  displayBCD(&myCanvas, 6, 2, Heures_U, 4, FctLum);
+		  displayBCD(&myCanvas, 6, 4, Heures_U, 4, ui16_FctLum);
+		  displayBCD(&myCanvas, 6, 3, Heures_U, 4, ui16_FctLum);
+		  displayBCD(&myCanvas, 6, 2, Heures_U, 4, ui16_FctLum);
 
-		  displayBCD(&myCanvas, 11, 4, Minutes_D, 4, FctLum);
-		  displayBCD(&myCanvas, 11, 3, Minutes_D, 4, FctLum);
-		  displayBCD(&myCanvas, 11, 2, Minutes_D, 4, FctLum);
+		  displayBCD(&myCanvas, 11, 4, Minutes_D, 4, ui16_FctLum);
+		  displayBCD(&myCanvas, 11, 3, Minutes_D, 4, ui16_FctLum);
+		  displayBCD(&myCanvas, 11, 2, Minutes_D, 4, ui16_FctLum);
 
-		  displayBCD(&myCanvas, 16, 4, Minutes_U, 4, FctLum);
-		  displayBCD(&myCanvas, 16, 3, Minutes_U, 4, FctLum);
-		  displayBCD(&myCanvas, 16, 2, Minutes_U, 4, FctLum);
-
-
-
-		  //autre
-		  // displayBCD(&myCanvas, 1, 3, ui8_Rx_2, 8, FctLum);
-		  // displayBCD(&myCanvas, 10, 3, ui8_Rx_3, 8, FctLum);
-
-		  // displayBCD(&myCanvas, 6, 4, ui8_Rx_11, 8, FctLum);
-		  // displayBCD(&myCanvas, 6, 1, ui8_Rx_12, 8, FctLum);
+		  displayBCD(&myCanvas, 16, 4, Minutes_U, 4, ui16_FctLum);
+		  displayBCD(&myCanvas, 16, 3, Minutes_U, 4, ui16_FctLum);
+		  displayBCD(&myCanvas, 16, 2, Minutes_U, 4, ui16_FctLum);
 
 
-		  // displayBCD(&myCanvas, 2, 3, ReadADC, 16, FctLum);
+
+		  // test de réception UART
+		  // displayBCD(&myCanvas, 1, 3, ui8_Rx_2, 8, ui16_FctLum);
+		  // displayBCD(&myCanvas, 10, 3, ui8_Rx_3, 8, ui16_FctLum);
+
+		  // displayBCD(&myCanvas, 6, 4, ui8_Rx_11, 8, ui16_FctLum);
+		  // displayBCD(&myCanvas, 6, 1, ui8_Rx_12, 8, ui16_FctLum);
 
 
+		  // displayBCD(&myCanvas, 2, 3, ReadADC, 16, ui16_FctLum);
+
+		  	  //animation Bad Apple
 		  IndexedSprite = &BadApple_2bit_7dot5fps;
 		  drawIndexedImage(IndexedSprite, (ui16_loop/5), 1, 1, &myCanvas);
-
-/*
-		  	  	  for(uint8_t diag=1; diag<=23; diag++){
-		  	  		  		  colorDiagonal(&myCanvas, HSVtoPixel((H + (diag* 255 / 23))%255 , MAX_LUX), diag);
-		  	    	  }
-
-		  	  	  if (H >= 255){
-		  	  		  		  H=0;
-
-		  	  		  	  }
-		  	  		  	  else{
-		  	  		  		  H++;
-		  	  		  	  }
-		  */
 	  }
 
+	  // Contrôle vitesse animation
+	  if (ui16_loop <= IndexedSprite->FrameAmount *5)	ui16_loop++;
+	  else ui16_loop = 0;
 
-
-
-
-
-
-
-
-	 // else {
-
-
-
-
-
-
-
-		  if (ui16_loop <= IndexedSprite->FrameAmount *2)	ui16_loop++;
-		  else ui16_loop = 0;
-
-
-	  	  sendCanvas(&myCanvas);
-
-
-
+	  sendCanvas(&myCanvas);
   }
   /* USER CODE END 3 */
 }
